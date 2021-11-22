@@ -2,11 +2,10 @@ package main
 
 import (
     "fmt"
-    "log"
     "os"
     "runtime"
     "strings"
-    "github.com/raleycs/src/fsService"
+    "github.com/raleycs/attackers-toolbox/internal"
 )
 
 // finds all .DS_Store files for a specific
@@ -21,7 +20,7 @@ func AnalyzeDsStore() {
 
     // confirm that the user exists on the current system
     path := "/Users/" + username
-    fmt.Println("Scanning DS_Stores for " + usernam)
+    fmt.Println("Scanning DS_Stores for " + username)
     if fsService.FileExists(path) == false {
         fmt.Println("[*] User does not exist...")
         fmt.Println("[*] Exiting program")
@@ -40,7 +39,7 @@ func AnalyzeDsStore() {
 // menu displays all available tools for use
 // it will prompt for user selection and return
 // the numerical option that they have chosen
-func Menu(OperatingSystem string) string {
+func Menu(OperatingSystem string) {
     var response string // holds user response
 
     fmt.Println("[*] Enter \"q\" or \"quit\" to exit")
@@ -51,7 +50,7 @@ func Menu(OperatingSystem string) string {
         // print tool options for user
         fmt.Println("1) DS_Store Explorer")
         fmt.Println()
-        fmt.Print("Please select a tool:")
+        fmt.Print("Please select a tool: ")
 
         // retrieve user response
         fmt.Scanln(&response)
@@ -88,5 +87,5 @@ func main() {
     fmt.Println()
 
     // retrieve user input via standard input
-    response := Menu(OperatingSystem)
+    Menu(OperatingSystem)
 }
