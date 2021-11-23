@@ -7,6 +7,7 @@ specific to the environment.
 ## Usage
 
 ```bash
+cd cmd/attackers-toolbox/
 go run main.go
 ```
 
