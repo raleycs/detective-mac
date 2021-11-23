@@ -1,9 +1,11 @@
 package fsService
 
 import (
+    "path/filepath"
+    "fmt"
+    "io/fs"
     "log"
     "os"
-    "io/ioutil"
 )
 
 // returns a bool, error tuple indicating whether a given file/directory exists.
@@ -14,18 +16,36 @@ func FileExists(path string) bool {
 
 // returns a slice of files that exist under a given path with
 // the name of the file provided to the function.
-func RetrieveFiles(file string, path string) []os.FileInfo {
-    var dsStores []os.FileInfo
-    files, err := ioutil.ReadDir(path)
+func RetrieveFiles(file string, path string) []string {
+    var dsStores []string
 
-    if err != nil {
-        log.Fatal(err)
+    // function called for every .DS_Store file found
+    var AnalyzeFile = func(filePath string, dir fs.DirEntry, err error) error {
+
+        // handle errors from original dirwalk
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        // if the file is .DS_Store add to dsStores slice
+        if dir.Name() == ".DS_Store"{
+            fullPath := filePath + dir.Name()
+
+            // print to standard output if the file is .DS_Store
+            fmt.Println("[*] " +  fullPath)
+            dsStores = append(dsStores, fullPath)
+        }
+
+        return nil
     }
 
-    for _, f := range files {
-        if f.Name() == file {
-            dsStores = append(dsStores, f)
-        }
+    // retrieve all .DS_Store files under given the given user's home directory
+    fmt.Println("[*] Retrieved the following .DS_Store files:")
+    err := filepath.WalkDir(path, AnalyzeFile)
+
+    // log errors from filepath
+    if err != nil {
+        log.Fatal(err)
     }
 
     return dsStores

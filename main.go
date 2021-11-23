@@ -4,6 +4,7 @@ import (
     "fmt"
     "os"
     "runtime"
+    "strconv"
     "strings"
     "github.com/raleycs/attackers-toolbox/internal"
 )
@@ -29,8 +30,7 @@ func AnalyzeDsStore() {
 
     // retrieve all .DS_Store files for the given user
     files := fsService.RetrieveFiles(".DS_Store", path)
-    fmt.Println("[*] Retrived the following .DS_Store files:")
-    fmt.Println(files)
+    fmt.Println("Found " + strconv.Itoa(len(files)) + " .DS_Store files")
 
     // re-direct user back to main menu
     Menu("darwin")
@@ -42,7 +42,7 @@ func AnalyzeDsStore() {
 func Menu(OperatingSystem string) {
     var response string // holds user response
 
-    fmt.Println("[*] Enter \"q\" or \"quit\" to exit")
+    fmt.Println("\n\n[*] Enter \"q\" or \"quit\" to exit")
 
     // mac-specific tools
     if OperatingSystem == "darwin" {
