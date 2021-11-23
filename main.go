@@ -67,6 +67,8 @@ func Menu(OperatingSystem string) {
     // exit program gracefully
     if response == "q" || response == "quit" {
         os.Exit(0)
+    } else {
+        Menu(OperatingSystem)
     }
 }
 
