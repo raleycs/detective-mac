@@ -29,11 +29,39 @@ func RetrieveFiles(file string, path string) []string {
 
         // if the file is .DS_Store add to dsStores slice
         if dir.Name() == ".DS_Store"{
-            fullPath := filePath + dir.Name()
+            // confirm file signature by reading first 6 bytes
+            // source: https://wiki.mozilla.org/DS_Store_File_Format
+            file, err := os.Open(filePath)
+            if err != nil {
+                return err
+            }
+
+            defer file.Close()
+
+            // get file size
+            // fileInfo, err := file.Stat()
+            // if err != nil {
+            //     return err
+            // }
+            // fileSize := fileInfo.Size()
+            // buffer := make([]byte, fileSize)
+
+            // read file into memory
+            buffer := make([]byte, 10) // read first 10 bytes of the file
+            _, err = file.Read(buffer)
+            if err != nil {
+                return err
+            }
+
+            fmt.Printf("File signature:\n0x")
+            for _, b := range buffer {
+                fmt.Printf("%X", b)
+            }
+            fmt.Println()
 
             // print to standard output if the file is .DS_Store
-            fmt.Println("[*] " +  fullPath)
-            dsStores = append(dsStores, fullPath)
+            fmt.Println("[*] " +  filePath)
+            dsStores = append(dsStores, filePath)
         }
 
         return nil

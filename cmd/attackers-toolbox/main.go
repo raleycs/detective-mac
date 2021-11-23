@@ -6,7 +6,7 @@ import (
     "runtime"
     "strconv"
     "strings"
-    "github.com/raleycs/attackers-toolbox/internal"
+    "github.com/raleycs/attackers-toolbox/internal/filesystem"
 )
 
 // finds all .DS_Store files for a specific
