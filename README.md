@@ -1,13 +1,12 @@
 # Attacker's Toolbox
 
-The Attacker's Toolbox is a Go program that contains a multitude of attacks/utilities. The toolbox is able
-to recognize the OS the attacker is the deploying the tool in and show all the available attacks/utilities
-specific to the environment.
+Detective Mac is a Go program that contains a multitude of attacks/utilities. The toolbox deploys on Mac environments
+and shows all the available attacks/utilities that the user can execute.
 
 ## Usage
 
 ```bash
-cd cmd/attackers-toolbox/
+cd cmd/detective-mac/
 go run main.go
 ```
 
