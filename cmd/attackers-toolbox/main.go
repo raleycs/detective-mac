@@ -6,7 +6,7 @@ import (
     "runtime"
     "strconv"
     "strings"
-    "github.com/raleycs/attackers-toolbox/internal/filesystem"
+    "github.com/raleycs/detective-mac/internal/filesystem"
 )
 
 // finds all .DS_Store files for a specific
@@ -76,7 +76,7 @@ func main() {
     fmt.Println("*-------------------------------------*")
     fmt.Println("|                                     |")
     fmt.Println("|                                     |")
-    fmt.Println("|  Welcome to the Attacker's Toolbox  |")
+    fmt.Println("|    Welcome to the Detective Mac     |")
     fmt.Println("|                                     |")
     fmt.Println("|                                     |")
     fmt.Println("*-------------------------------------*")

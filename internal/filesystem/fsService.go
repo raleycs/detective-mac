@@ -6,7 +6,7 @@ import (
     "io/fs"
     "log"
     "os"
-    "github.com/raleycs/attackers-toolbox/internal/constants"
+    "github.com/raleycs/detective-mac/internal/constants"
 )
 
 // returns a bool, error tuple indicating whether a given file/directory exists.
