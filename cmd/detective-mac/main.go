@@ -24,7 +24,7 @@ func AnalyzeDsStore() {
     fmt.Println("[*] Scanning DS_Stores for " + username)
     if fsService.FileExists(path) == false {
         fmt.Println("[!] User does not exist...")
-        Menu("darwin") // redirect user back to menu
+        Menu() // redirect user back to menu
     }
 
     // retrieve all .DS_Store files for the given user
@@ -32,42 +32,38 @@ func AnalyzeDsStore() {
     fmt.Println("[*] Found " + strconv.Itoa(len(files)) + " .DS_Store files")
 
     // re-direct user back to main menu
-    Menu("darwin")
+    Menu()
 }
 
 // menu displays all available tools for use
 // it will prompt for user selection and return
 // the numerical option that they have chosen
-func Menu(OperatingSystem string) {
+func Menu() {
     var response string // holds user response
 
     fmt.Println("\n\n[*] Enter \"q\" or \"quit\" to exit")
 
-    // mac-specific tools
-    if OperatingSystem == "darwin" {
+    // print tool options for user
+    fmt.Println("1) DS_Store Explorer")
+    fmt.Println()
+    fmt.Print("Please select a tool: ")
 
-        // print tool options for user
-        fmt.Println("1) DS_Store Explorer")
-        fmt.Println()
-        fmt.Print("Please select a tool: ")
+    // retrieve user response
+    fmt.Scanln(&response)
+    fmt.Println()
+    response = strings.ToLower(response)
 
-        // retrieve user response
-        fmt.Scanln(&response)
-        fmt.Println()
-        response = strings.ToLower(response)
-
-        // execute appropriate tools based on 
-        // user response
-        if response == "1" {
-            AnalyzeDsStore()
-        }
+    // execute appropriate tools based on 
+    // user response
+    if response == "1" {
+        AnalyzeDsStore()
     }
 
     // exit program gracefully
     if response == "q" || response == "quit" {
         os.Exit(0)
     } else {
-        Menu(OperatingSystem)
+        Menu()
     }
 }
 
@@ -82,10 +78,11 @@ func main() {
     fmt.Println("*-------------------------------------*")
     fmt.Print("\n\n")
 
-    fmt.Println("[*] Retrieving system information")
-    OperatingSystem := runtime.GOOS
-    fmt.Println("[*] Current OS: " + OperatingSystem)
+    if runtime.GOOS != "darwin" {
+        fmt.Println("This can only be run for Mac Machines!")
+        os.Exit(0)
+    }
 
     // retrieve user input via standard input
-    Menu(OperatingSystem)
+    Menu()
 }
