@@ -21,7 +21,7 @@ func AnalyzeDsStore() {
 
     // confirm that the user exists on the current system
     path := "/Users/" + username
-    fmt.Println("Scanning DS_Stores for " + username)
+    fmt.Println("[*] Scanning DS_Stores for " + username)
     if fsService.FileExists(path) == false {
         fmt.Println("[!] User does not exist...")
         Menu("darwin") // redirect user back to menu
@@ -29,7 +29,7 @@ func AnalyzeDsStore() {
 
     // retrieve all .DS_Store files for the given user
     files := fsService.RetrieveFiles(".DS_Store", path)
-    fmt.Println("Found " + strconv.Itoa(len(files)) + " .DS_Store files")
+    fmt.Println("[*] Found " + strconv.Itoa(len(files)) + " .DS_Store files")
 
     // re-direct user back to main menu
     Menu("darwin")
