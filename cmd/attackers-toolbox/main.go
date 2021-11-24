@@ -86,7 +86,6 @@ func main() {
     fmt.Println("[*] Retrieving system information")
     OperatingSystem := runtime.GOOS
     fmt.Println("[*] Current OS: " + OperatingSystem)
-    fmt.Println()
 
     // retrieve user input via standard input
     Menu(OperatingSystem)
