@@ -6,6 +6,7 @@ import (
     "io/fs"
     "log"
     "os"
+    "github.com/raleycs/attackers-toolbox/internal/constants"
 )
 
 // returns a bool, error tuple indicating whether a given file/directory exists.
@@ -38,37 +39,27 @@ func RetrieveFiles(file string, path string) []string {
 
             defer file.Close()
 
-            // get file size
-            // fileInfo, err := file.Stat()
-            // if err != nil {
-            //     return err
-            // }
-            // fileSize := fileInfo.Size()
-            // buffer := make([]byte, fileSize)
-
             // read file into memory
-            buffer := make([]byte, 10) // read first 10 bytes of the file
+            var signature [8]byte
+            buffer := make([]byte, 8) // read first 8 bytes of the file
             _, err = file.Read(buffer)
             if err != nil {
                 return err
             }
+            copy(signature[:], buffer)
 
-            fmt.Printf("File signature:\n0x")
-            for _, b := range buffer {
-                fmt.Printf("%X", b)
+            // compare file signature
+            if signature != constants.GetDsStoreSignature() {
+                fmt.Printf("[*] %s does not match signature!\n", filePath)
+            } else {
+                dsStores = append(dsStores, filePath) // add file to confirmed .DS_Store slice
             }
-            fmt.Println()
-
-            // print to standard output if the file is .DS_Store
-            fmt.Println("[*] " +  filePath)
-            dsStores = append(dsStores, filePath)
         }
 
         return nil
     }
 
     // retrieve all .DS_Store files under given the given user's home directory
-    fmt.Println("[*] Retrieved the following .DS_Store files:")
     err := filepath.WalkDir(path, AnalyzeFile)
 
     // log errors from filepath
