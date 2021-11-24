@@ -9,9 +9,9 @@ import (
     "github.com/raleycs/detective-mac/internal/filesystem"
 )
 
-// finds all .DS_Store files for a specific
-// user and extracts information out of those files
-func AnalyzeDsStore() {
+// analyzeDsStore finds all .DS_Store files for a specific
+// user and analyzes their contents. This function returns nothing.
+func analyzeDsStore() {
     var username string // holds target's username
 
     // get user input
@@ -35,9 +35,9 @@ func AnalyzeDsStore() {
     Menu()
 }
 
-// menu displays all available tools for use
-// it will prompt for user selection and return
-// the numerical option that they have chosen
+// Menu displays all available tools for use it will prompt for user selection.
+// The appropriate action will be taken based on the user's numerical response.
+// This function returns nothing.
 func Menu() {
     var response string // holds user response
 
@@ -56,7 +56,7 @@ func Menu() {
     // execute appropriate tools based on 
     // user response
     if response == "1" {
-        AnalyzeDsStore()
+        analyzeDsStore()
     }
 
     // exit program gracefully

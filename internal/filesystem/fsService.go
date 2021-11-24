@@ -9,14 +9,15 @@ import (
     "github.com/raleycs/detective-mac/internal/constants"
 )
 
-// returns a bool, error tuple indicating whether a given file/directory exists.
+// FileExists returns a bool determining if a file exists.
+// If the file exists then true is returned, otherwise false.
 func FileExists(path string) bool {
     if _, err := os.Stat(path); os.IsNotExist(err) { return false }
     return true
 }
 
-// returns a slice of files that exist under a given path with
-// the name of the file provided to the function.
+// RetrieveFiles returns a slice of strings that exist under the string path.
+// Each element in the slice of strings carries the full path with the file.
 func RetrieveFiles(file string, path string) []string {
     var dsStores []string
 
@@ -40,13 +41,13 @@ func RetrieveFiles(file string, path string) []string {
             defer file.Close()
 
             // read file into memory
-            var signature [8]byte
-            buffer := make([]byte, 8) // read first 8 bytes of the file
+            var signature [8]byte // array of size 8
+            buffer := make([]byte, 8) // read first 8 bytes of the file into a temporary buffer slice
             _, err = file.Read(buffer)
             if err != nil {
                 return err
             }
-            copy(signature[:], buffer)
+            copy(signature[:], buffer) // copy contents of buffer slice into array
 
             // compare file signature
             if signature != constants.GetDsStoreSignature() {
@@ -55,7 +56,6 @@ func RetrieveFiles(file string, path string) []string {
                 dsStores = append(dsStores, filePath) // add file to confirmed .DS_Store slice
             }
         }
-
         return nil
     }
 
