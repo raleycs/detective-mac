@@ -22,7 +22,7 @@ func RetrieveFiles(file string, path string) []string {
     var dsStores []string
 
     // function called for every .DS_Store file found
-    var AnalyzeFile = func(filePath string, dir fs.DirEntry, err error) error {
+    var verifyFile = func(filePath string, dir fs.DirEntry, err error) error {
 
         // handle errors from original dirwalk
         if err != nil {
@@ -60,7 +60,7 @@ func RetrieveFiles(file string, path string) []string {
     }
 
     // retrieve all .DS_Store files under given the given user's home directory
-    err := filepath.WalkDir(path, AnalyzeFile)
+    err := filepath.WalkDir(path, verifyFile)
 
     // log errors from filepath
     if err != nil {
