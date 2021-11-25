@@ -35,7 +35,7 @@ func RetrieveFiles(file string, path string) []string {
         // open file
         f, _ := os.Open(filePath)
 
-        defer f.Close()
+        defer f.Close() // close file after completion of verifyFile
 
         // verify file signatures
         if dir.Name() == file {
