@@ -18,10 +18,13 @@ func FileExists(path string) bool {
 
 // RetrieveFiles returns a slice of strings that exist under the string path.
 // Each element in the slice of strings carries the full path with the file.
+// The files are checked with their own file signatures before being added to the slice.
 func RetrieveFiles(file string, path string) []string {
-    var dsStores []string
+    var verified []string
 
-    // function called for every .DS_Store file found
+    // verifyFile returns an error if file verification did not succeed. For each file
+    // found under the dirwalk, it is compared with a known file signature to verify
+    // that the file is what it claims to be.
     var verifyFile = func(filePath string, dir fs.DirEntry, err error) error {
 
         // handle errors from original dirwalk
@@ -29,21 +32,17 @@ func RetrieveFiles(file string, path string) []string {
             log.Fatal(err)
         }
 
-        // if the file is .DS_Store add to dsStores slice
-        if dir.Name() == ".DS_Store"{
-            // confirm file signature by reading first 6 bytes
-            // source: https://wiki.mozilla.org/DS_Store_File_Format
-            file, err := os.Open(filePath)
-            if err != nil {
-                return err
-            }
+        // open file
+        f, _ := os.Open(filePath)
 
-            defer file.Close()
+        defer f.Close()
 
+        // verify file signatures
+        if dir.Name() == file {
             // read file into memory
             var signature [8]byte // array of size 8
             buffer := make([]byte, 8) // read first 8 bytes of the file into a temporary buffer slice
-            _, err = file.Read(buffer)
+            _, err = f.Read(buffer)
             if err != nil {
                 return err
             }
@@ -53,7 +52,7 @@ func RetrieveFiles(file string, path string) []string {
             if signature != constants.GetDsStoreSignature() {
                 fmt.Printf("[*] %s does not match signature!\n", filePath)
             } else {
-                dsStores = append(dsStores, filePath) // add file to confirmed .DS_Store slice
+                verified = append(verified, filePath) // add file to confirmed .DS_Store slice
             }
         }
         return nil
@@ -67,5 +66,5 @@ func RetrieveFiles(file string, path string) []string {
         log.Fatal(err)
     }
 
-    return dsStores
+    return verified
 }
