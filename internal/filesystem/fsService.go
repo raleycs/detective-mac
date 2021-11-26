@@ -5,6 +5,7 @@ import (
     "fmt"
     "io/fs"
     "log"
+    "reflect"
     "os"
     "github.com/raleycs/detective-mac/internal/constants"
 )
@@ -40,7 +41,7 @@ func RetrieveFiles(file string, path string) []string {
         // verify file signatures
         if dir.Name() == file {
             // read file into memory
-            var signature [8]byte // array of size 8
+            var signature []byte // slice containing first 8 bytes (magic number + padding)
             // var firstOffset [4]byte // array of size 4 -- contains offset of root block
             // var secondOffset [4]byte // array of size 4 -- contains offset of root block
             buffer := make([]byte, 24) // read first 24 bytes of the file into a temporary buffer slice
@@ -48,10 +49,8 @@ func RetrieveFiles(file string, path string) []string {
             if err != nil {
                 return err
             }
-            copy(signature[:], buffer[0:8]) // copy contents of buffer slice into array
-
             // compare file magic number
-            if signature != constants.GetDsStoreSignature() {
+            if reflect.DeepEqual(signature, constants.GetDsStoreSignature()) {
                 fmt.Printf("[*] %s does not match signature!\n", filePath)
             } else {
                 verified = append(verified, filePath) // add file to confirmed .DS_Store slice
