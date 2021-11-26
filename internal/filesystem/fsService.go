@@ -34,8 +34,10 @@ func RetrieveFiles(file string, path string) []string {
         }
 
         // open file
-        f, _ := os.Open(filePath)
-
+        f, err := os.Open(filePath)
+        if err != nil {
+            return nil
+        }
         defer f.Close() // close file after completion of verifyFile
 
         // verify file signatures
