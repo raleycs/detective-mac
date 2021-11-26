@@ -41,14 +41,16 @@ func RetrieveFiles(file string, path string) []string {
         if dir.Name() == file {
             // read file into memory
             var signature [8]byte // array of size 8
-            buffer := make([]byte, 8) // read first 8 bytes of the file into a temporary buffer slice
+            // var firstOffset [4]byte // array of size 4 -- contains offset of root block
+            // var secondOffset [4]byte // array of size 4 -- contains offset of root block
+            buffer := make([]byte, 24) // read first 24 bytes of the file into a temporary buffer slice
             _, err = f.Read(buffer)
             if err != nil {
                 return err
             }
-            copy(signature[:], buffer) // copy contents of buffer slice into array
+            copy(signature[:], buffer[0:8]) // copy contents of buffer slice into array
 
-            // compare file signature
+            // compare file magic number
             if signature != constants.GetDsStoreSignature() {
                 fmt.Printf("[*] %s does not match signature!\n", filePath)
             } else {
