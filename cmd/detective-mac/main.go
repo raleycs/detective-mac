@@ -7,11 +7,12 @@ import (
     "strconv"
     "strings"
     "github.com/raleycs/detective-mac/internal/filesystem"
+    "github.com/raleycs/detective-mac/internal/analysis"
 )
 
-// analyzeDsStore finds all .DS_Store files for a specific
+// dsStore finds all .DS_Store files for a specific
 // user and analyzes their contents. This function returns nothing.
-func analyzeDsStore() {
+func dsStore() {
     var username string // holds target's username
 
     // get user input
@@ -30,6 +31,11 @@ func analyzeDsStore() {
     // retrieve all .DS_Store files for the given user
     files := fsService.RetrieveFiles(".DS_Store", path)
     fmt.Println("[*] Found " + strconv.Itoa(len(files)) + " .DS_Store files")
+
+    // analyze each .DS_Store file and output reports to reports directory
+    fmt.Println("[*] Status: Running analysis on .DS_Store files")
+    analysisService.AnalyzeDsStore(files)
+    fmt.Println("[*] Status: Analysis Finished")
 
     // re-direct user back to main menu
     Menu()
@@ -56,7 +62,7 @@ func Menu() {
     // execute appropriate tools based on 
     // user response
     if response == "1" {
-        analyzeDsStore()
+        dsStore()
     }
 
     // exit program gracefully
