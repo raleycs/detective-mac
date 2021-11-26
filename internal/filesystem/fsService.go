@@ -39,7 +39,7 @@ func RetrieveFiles(file string, path string) []string {
         defer f.Close() // close file after completion of verifyFile
 
         // verify file signatures
-        if dir.Name() == file {
+        if dir.Name() == ".DS_Store" {
             // read file into memory
             var signature []byte // slice containing first 8 bytes (magic number + padding)
             // var firstOffset [4]byte // array of size 4 -- contains offset of root block
