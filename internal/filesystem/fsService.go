@@ -41,7 +41,7 @@ func RetrieveFiles(file string, path string) []string {
         // verify file signatures
         if dir.Name() == ".DS_Store" {
 
-            // read first 24 bytes of the file into a temporary buffer
+            // read first 20 bytes of the file into a temporary buffer
             buffer := make([]byte, 20)
             _, err = f.Read(buffer)
             if err != nil {
