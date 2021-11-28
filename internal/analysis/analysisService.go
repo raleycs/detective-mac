@@ -3,6 +3,7 @@ package analysisService
 import(
     "encoding/hex"
     "fmt"
+    "io"
     "log"
     "os"
     "strconv"
@@ -26,42 +27,50 @@ func AnalyzeDsStore(files []string) {
             }
             defer file.Close() // close file after completion of anonymous function
 
-            // get file size
-            fileInfo, err := file.Stat()
-            if err != nil {
-                log.Fatal(err)
-            }
-
-            // read entire file into a temporary buffer
-            buffer := make([]byte, fileInfo.Size())
+            // read header into a temporary buffer
+            buffer := make([]byte, 20)
             _, err = file.Read(buffer)
             if err != nil {
                 log.Fatal(err)
             }
 
-            // get root block
+            // get root block boundaries
             startString, err := strconv.ParseInt(hex.EncodeToString(buffer[8:12]), 16, 64)
             if err != nil {
                 log.Fatal(err)
             }
-            endString, err := strconv.ParseInt(hex.EncodeToString(buffer[16:20]), 16, 64)
-            if err != nil {
-                log.Fatal(err)
-            }
+            // endString, err := strconv.ParseInt(hex.EncodeToString(buffer[16:20]), 16, 64)
+            // if err != nil {
+            //     log.Fatal(err)
+            // }
             rootSize, err := strconv.ParseInt(hex.EncodeToString(buffer[12:16]), 16, 64)
             if err != nil {
                 log.Fatal(err)
             }
-            startRoot, err := hex.DecodeString(fmt.Sprintf("%x", startString + 0x04))
+            // startRoot, err := hex.DecodeString(fmt.Sprintf("%x", startString + 0x04))
+            // if err != nil {
+            //     log.Fatal(err)
+            // }
+            // endRoot, err := hex.DecodeString(fmt.Sprintf("%x", rootSize + endString + 0x04))
+            // if err != nil {
+            //     log.Fatal(err)
+            // }
+            // fmt.Printf("0x%x\n", startRoot)
+            // fmt.Printf("0x%x\n", endRoot)
+
+            // extract root block
+            _, err = file.Seek(int64(startString), io.SeekStart)
             if err != nil {
                 log.Fatal(err)
             }
-            endRoot, err := hex.DecodeString(fmt.Sprintf("%x", rootSize + endString + 0x04))
-            if err != nil {
+            root := make([]byte, rootSize)
+            n, err := file.Read(root[:cap(root)])
+            if err != nil && err != io.EOF {
                 log.Fatal(err)
             }
-            fmt.Printf("0x%x\n", startRoot)
-            fmt.Printf("0x%x\n", endRoot)
+            root = root[:n]
+            fmt.Printf("Expected root block size: 0x%x\n", rootSize)
+            fmt.Printf("Actual root block size: 0x%x\n", len(root))
 
             return
         }()
