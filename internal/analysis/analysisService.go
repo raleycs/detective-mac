@@ -1,9 +1,11 @@
 package analysisService
 
 import(
+    "encoding/hex"
     "fmt"
     "log"
     "os"
+    "strconv"
 )
 
 // AnalyzeDsStore takes in a slice of .DS_Store files with their full paths.
@@ -30,14 +32,36 @@ func AnalyzeDsStore(files []string) {
                 log.Fatal(err)
             }
 
-            // read file into a temporary buffer
+            // read entire file into a temporary buffer
             buffer := make([]byte, fileInfo.Size())
             _, err = file.Read(buffer)
             if err != nil {
                 log.Fatal(err)
             }
 
-            fmt.Printf("0x%X\n", buffer[0:26])
+            // get root block
+            startString, err := strconv.ParseInt(hex.EncodeToString(buffer[8:12]), 16, 64)
+            if err != nil {
+                log.Fatal(err)
+            }
+            endString, err := strconv.ParseInt(hex.EncodeToString(buffer[16:20]), 16, 64)
+            if err != nil {
+                log.Fatal(err)
+            }
+            rootSize, err := strconv.ParseInt(hex.EncodeToString(buffer[12:16]), 16, 64)
+            if err != nil {
+                log.Fatal(err)
+            }
+            startRoot, err := hex.DecodeString(fmt.Sprintf("%x", startString + 0x04))
+            if err != nil {
+                log.Fatal(err)
+            }
+            endRoot, err := hex.DecodeString(fmt.Sprintf("%x", rootSize + endString + 0x04))
+            if err != nil {
+                log.Fatal(err)
+            }
+            fmt.Printf("0x%x\n", startRoot)
+            fmt.Printf("0x%x\n", endRoot)
 
             return
         }()
