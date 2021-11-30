@@ -39,24 +39,10 @@ func AnalyzeDsStore(files []string) {
             if err != nil {
                 log.Fatal(err)
             }
-            // endString, err := strconv.ParseInt(hex.EncodeToString(buffer[16:20]), 16, 64)
-            // if err != nil {
-            //     log.Fatal(err)
-            // }
             rootSize, err := strconv.ParseInt(hex.EncodeToString(buffer[12:16]), 16, 64)
             if err != nil {
                 log.Fatal(err)
             }
-            // startRoot, err := hex.DecodeString(fmt.Sprintf("%x", startString + 0x04))
-            // if err != nil {
-            //     log.Fatal(err)
-            // }
-            // endRoot, err := hex.DecodeString(fmt.Sprintf("%x", rootSize + endString + 0x04))
-            // if err != nil {
-            //     log.Fatal(err)
-            // }
-            // fmt.Printf("0x%x\n", startRoot)
-            // fmt.Printf("0x%x\n", endRoot)
 
             // extract root block
             _, err = file.Seek(int64(startString), io.SeekStart)
