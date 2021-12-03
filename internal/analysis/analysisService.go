@@ -44,6 +44,8 @@ func AnalyzeDsStore(files []string) {
                 log.Fatal(err)
             }
 
+            fmt.Println("[*] Extracting root block")
+
             // extract root block
             _, err = file.Seek(int64(startString), io.SeekStart)
             if err != nil {
@@ -55,8 +57,26 @@ func AnalyzeDsStore(files []string) {
                 log.Fatal(err)
             }
             root = root[:n]
-            fmt.Printf("Expected root block size: 0x%x\n", rootSize)
-            fmt.Printf("Actual root block size: 0x%x\n", len(root))
+
+            fmt.Println("[*] Reading root block")
+
+            // get number of offsets
+            numOffsets, err := strconv.ParseInt(hex.EncodeToString(root[4:8]), 16, 64)
+            if err != nil {
+                log.Fatal(err)
+            }
+            fmt.Printf("[*] Offsets found: %d\n", numOffsets)
+
+            // extract offsets
+            offsets := []int64{}
+            for i := 0; i < int(numOffsets); i++ {
+                address, err := strconv.ParseInt(hex.EncodeToString(root[(i * 4) + 12:(i * 4) + 16]), 16, 64)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                offsets = append(offsets, address)
+                fmt.Printf("[*] Offset %d: 0x%x\n", i, offsets[len(offsets)-1])
+            }
 
             return
         }()
